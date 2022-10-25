@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
       - uses: exuanbo/actions-deploy-gist@v1
         with:
-          node-version: "18.x"
+          node-version: 18
           token: ${{ secrets.TOKEN }}
           gist_id: ${{ secrets.GIST_ID }}
           file_path: build/result.md
