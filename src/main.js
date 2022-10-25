@@ -13,7 +13,9 @@ const { JSDOM } = jsdom;
 json2md.converters.details = function (input, json2md) {
   return `<details>
 <summary>${input.title}</summary>
+
 ${json2md(input.content)}
+
 </details>`;
 };
 
