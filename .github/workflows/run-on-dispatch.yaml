@@ -14,12 +14,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - run: npm install
+      - name: Run script
+        run: npm start
       - uses: exuanbo/actions-deploy-gist@v1
         with:
           token: ${{ secrets.TOKEN }}
           gist_id: ${{ secrets.GIST_ID }}
           file_path: build/result.md
           file_type: text
-      - run: npm install
-      - name: Run script
-        run: npm start
