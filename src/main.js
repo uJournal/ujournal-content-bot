@@ -10,15 +10,14 @@ const fetchers = require("./fetchers");
 
 const { JSDOM } = jsdom;
 
-json2md.converters.details = function (input, json2md) {
-  return `<details>
-<summary>${input.title}</summary>
+// json2md.converters.details = function (input, json2md) {
+//   return `<details>
+// <summary>${input.title}</summary>
 
+// ${json2md(input.content)}
 
-${json2md(input.content)}
-
-</details>`;
-};
+// </details>`;
+// };
 
 const getDomByHtml = (html) => {
   return new JSDOM(html);
@@ -69,16 +68,12 @@ module.exports = async () => {
       const content = [];
 
       for (let { title, date, time, url } of fetcherResult) {
-        content.push({
-          p: `**${date} ${time}** (${cleanupTitle(title)})[${url}]`,
-        });
+        content.push(`**${date} ${time}** [${cleanupTitle(title)}](${url})`);
       }
 
+      result.push({ h2: `${fetcherKey} (${fetcherResult.length})` });
       result.push({
-        details: {
-          title: `${fetcherKey} (${fetcherResult.length})`,
-          content,
-        },
+        ul: content,
       });
     } catch (error) {
       console.log(error);
