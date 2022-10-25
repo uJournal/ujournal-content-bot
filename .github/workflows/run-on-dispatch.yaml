@@ -12,9 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - uses: exuanbo/actions-deploy-gist@v1
         with:
           node-version: 18
+      - uses: exuanbo/actions-deploy-gist@v1
+        with:
           token: ${{ secrets.TOKEN }}
           gist_id: ${{ secrets.GIST_ID }}
           file_path: build/result.md
