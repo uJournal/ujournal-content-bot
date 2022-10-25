@@ -14,6 +14,7 @@ json2md.converters.details = function (input, json2md) {
   return `<details>
 <summary>${input.title}</summary>
 
+
 ${json2md(input.content)}
 
 </details>`;
@@ -69,10 +70,7 @@ module.exports = async () => {
 
       for (let { title, date, time, url } of fetcherResult) {
         content.push({
-          link: {
-            title: `(${date} ${time}) ${cleanupTitle(title)}`,
-            source: url,
-          },
+          p: `**${date} ${time}** (${cleanupTitle(title)})[${url}]`,
         });
       }
 
