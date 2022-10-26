@@ -20,7 +20,8 @@ const { JSDOM } = jsdom;
 // };
 
 const getDomByHtml = (html) => {
-  return new JSDOM(html);
+  const virtualConsole = new jsdom.VirtualConsole();
+  return new JSDOM(html, { virtualConsole });
 };
 
 const getHtmlByUrl = async (url, options) => {
@@ -60,15 +61,25 @@ module.exports = async () => {
   const result = [];
 
   for (let fetcherKey of fetcherKeys) {
-    console.log(`Start fetcher: ${fetcherKey}`);
+    console.log(`[${fetcherKey}] Start fetcher`);
     try {
       const fetcherResult = await fetchers[fetcherKey](tools);
-      console.log(`Result fetcher count: ${fetcherResult.length}`);
+      console.log(`[${fetcherKey}] Result count: ${fetcherResult.length}`);
 
       const content = [];
 
-      for (let { title, date, time, url } of fetcherResult) {
-        content.push(`**${date} ${time}** [${cleanupTitle(title)}](${url})`);
+      for (let { title, date, time, url, important } of fetcherResult) {
+        content.push(
+          `${time} ${date} ${
+            important
+              ? `**[${cleanupTitle(title)}](${url})**`
+              : `[${cleanupTitle(title)}](${url})`
+          }`
+        );
+      }
+
+      if (process.env.DEBUG_FETCHER === fetcherKey) {
+        console.log(`[${fetcherKey}] Debug result: `, fetcherResult);
       }
 
       result.push({ h2: `${fetcherKey} (${fetcherResult.length})` });
@@ -77,13 +88,13 @@ module.exports = async () => {
       });
     } catch (error) {
       console.log(error);
-      console.log(`Error fetcher: ${error.message}`);
+      console.log(`[${fetcherKey}] Error fetcher: ${error.message}`);
     }
 
     fs.writeFileSync(path.join(".", "build", "result.md"), json2md(result), {
       encoding: "utf-8",
     });
 
-    console.log(`End fetcher: ${fetcherKey}`);
+    console.log(`[${fetcherKey}] End fetcher`);
   }
 };
